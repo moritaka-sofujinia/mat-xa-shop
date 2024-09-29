@@ -15,14 +15,14 @@ export const ThemeProvider = ({ children }) => {
     dark: {
       background: '#171717',
       text: '#EDEDED',
-      primary: '#DA0037',
+      primary: '#4ca1af',
       secondary: '#444444',
       accent: '#F0F5F9',
     },
     light: {
       background: '#F0F5F9',
       text: '#171717',
-      primary: '#DA0037',
+      primary: '#4ca1af',
       secondary: '#444444',
       accent: '#EDEDED',
     },

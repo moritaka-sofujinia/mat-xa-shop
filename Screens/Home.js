@@ -10,7 +10,7 @@ import Feather from '@expo/vector-icons/Feather';
 const theme = {
   background: '#F0F5F9',
   text: '#171717',
-  primary: '#DA0037',
+  primary: '#4ca1af',
   secondary: '#444444',
   accent: '#EDEDED',
 };
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     height: 48,
     borderWidth: 1,
     borderColor: theme.secondary,
-    borderRadius: 24,
+    borderRadius: 10,
     paddingHorizontal: 16,
     backgroundColor: theme.accent,
     color: theme.text,
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     backgroundColor: theme.primary,
-    borderRadius: 24,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,

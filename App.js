@@ -13,8 +13,10 @@
   // Import screens
   import LoginScreen from './Screens/LoginScreens';
   import SignupScreen from './Screens/Signup';
+  import SettingsScreen from './Screens/Settings';
   import ForgotPasswordScreen from './Screens/ForgotPassword';
   import Home from './Screens/Home';
+  import Customer from './Screens/Customer';
   import AddService from './Screens/AddServices';
   import ServiceDetail from './Screens/ServiceDetail';
   import EditService from './Screens/EditService';
@@ -35,14 +37,14 @@
     dark: {
       background: '#171717',
       text: '#EDEDED',
-      primary: '#DA0037',
+      primary: '#4ca1af',
       secondary: '#444444',
       accent: '#F0F5F9',
     },
     light: {
       background: '#F0F5F9',
       text: '#171717',
-      primary: '#DA0037',
+      primary: '#4ca1af',
       secondary: '#444444',
       accent: '#EDEDED',
     },
@@ -83,9 +85,8 @@
           component={AdminStackNavigator}
           options={{ headerShown: false, title: 'Home' }}
         />
-        <Tab.Screen name="Transaction" component={Home} />
-        <Tab.Screen name="Customer" component={Home} />
-        <Tab.Screen name="Setting" component={Home} />
+        <Tab.Screen name="Customer" component={Customer} />
+        <Tab.Screen name="Setting" component={SettingsScreen} />
       </Tab.Navigator>
     );
   }
@@ -112,9 +113,9 @@
             headerRight: () => (
               <Icon 
                 name="account-circle" 
-                size={28} 
+                size={30} 
                 color={theme.light.primary}
-                style={{ marginRight: 25 }}
+                style={{ marginRight: 10 }}
                 onPress={() => navigation.navigate('Profile')}
               />
             ),
@@ -164,7 +165,7 @@
         />
         {/* <Tab.Screen name="HomeUser" component={UserStack} /> */}
         <Tab.Screen name="Favorites" component={Favorites} />
-        <Tab.Screen name="Setting" component={HomeUser} />
+        <Tab.Screen name="Setting" component={SettingsScreen} />
       </Tab.Navigator>
     );
   }

@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const theme = {
   background: '#F0F5F9',
   text: '#171717',
-  primary: '#DA0037',
+  primary: '#4ca1af',
   secondary: '#444444',
   accent: '#EDEDED',
 };

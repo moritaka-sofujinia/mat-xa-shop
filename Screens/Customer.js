@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Animated } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { AuthContext, FavoritesContext } from '../App';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { AuthContext } from '../App';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import Feather from '@expo/vector-icons/Feather';
 
 const theme = {
   background: '#F0F5F9',
@@ -15,20 +15,18 @@ const theme = {
   accent: '#EDEDED',
 };
 
-const HomeUser = () => {
-  const [services, setServices] = useState([]);
+const Customer = () => {
+  const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const { user } = useContext(AuthContext);
-  const { favorites, toggleFavorite, isFavorite } = useContext(FavoritesContext);
-  console.log('Current favorites:', favorites);
   const navigation = useNavigation();
-
+  
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: `Welcome, ${user?.fullname || 'User'}`,
+      headerTitle: `${user?.fullname || 'Admin'}`,
       headerRight: () => (
         <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.avatarButton}>
-          <AntDesign name="user" size={24} color={theme.text} />
+          <Icon name="account-circle" size={24} color="#000" />
         </TouchableOpacity>
       ),
     });
@@ -36,81 +34,61 @@ const HomeUser = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      fetchServices();
+      fetchUsers();
     }, [])
   );
 
-  const fetchServices = async () => {
-    const servicesCollection = collection(db, 'service');
-    const servicesSnapshot = await getDocs(servicesCollection);
-    const servicesList = servicesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    setServices(servicesList);
+  const fetchUsers = async () => {
+    const usersCollection = collection(db, 'user');
+    const usersSnapshot = await getDocs(usersCollection);
+    const usersList = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    setUsers(usersList);
   };
 
   const handleSearch = async () => {
     if (searchQuery.trim() === '') {
-      fetchServices();
+      fetchUsers(); // Lấy tất cả người dùng nếu không có từ khóa tìm kiếm
       return;
     }
 
-    const servicesCollection = collection(db, 'service');
-    const q = query(servicesCollection, where("name", ">=", searchQuery), where("name", "<=", searchQuery + '\uf8ff'));
+    const usersCollection = collection(db, 'user');
+    const q = query(
+      usersCollection, 
+      where("email", ">=", searchQuery), 
+      where("email", "<=", searchQuery + '\uf8ff')
+    );
+    
     const querySnapshot = await getDocs(q);
     const searchResults = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    setServices(searchResults);
+    setUsers(searchResults);
   };
 
-  const renderItem = ({ item }) => {
-    const heartScale = new Animated.Value(1);
-
-    const animateHeart = () => {
-      Animated.sequence([
-        Animated.timing(heartScale, { toValue: 1.2, duration: 100, useNativeDriver: true }),
-        Animated.timing(heartScale, { toValue: 1, duration: 100, useNativeDriver: true })
-      ]).start();
-      toggleFavorite(item.id);
-    };
-    console.log(`Is ${item.id} a favorite:`, isFavorite(item.id));
-    return (
-      <TouchableOpacity
-        style={styles.item}
-        onPress={() => navigation.navigate('ServiceDetailsUser', { service: item })}
-      >
-        <View style={styles.serviceInfo}>
-          <Text style={styles.title}>{item.name}</Text>
-          <Text style={styles.price}>${item.price}</Text>
-          {/* <Text style={styles.creator}>Created by: {item.creator}</Text> */}
-        </View>
-        <TouchableOpacity onPress={animateHeart}>
-          <Animated.View style={{ transform: [{ scale: heartScale }] }}>
-            <AntDesign 
-              name={isFavorite(item.id) ? "heart" : "hearto"} 
-              size={24} 
-              color={isFavorite(item.id) ? theme.primary : theme.secondary} 
-            />
-          </Animated.View>
-        </TouchableOpacity>
-      </TouchableOpacity>
-    );
-  };
+  const renderItem = ({ item }) => (
+    <TouchableOpacity style={styles.item}>
+      <View style={styles.userInfo}>
+        <Text style={styles.title}>{item.email}</Text>
+        <Text style={styles.role}>{item.role}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Search"
+          placeholder="Search customer..."
           placeholderTextColor={theme.secondary}
           value={searchQuery}
           onChangeText={setSearchQuery}
-          onSubmitEditing={handleSearch}
+          onSubmitEditing={handleSearch} // Gọi hàm tìm kiếm khi nhấn Enter
         />
         <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
           <AntDesign name="search1" size={24} color={theme.accent} />
         </TouchableOpacity>
       </View>
       <FlatList
-        data={services}
+        data={users}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.list}
@@ -149,7 +127,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   list: {
-    paddingBottom: 16,
+    paddingBottom: 80,
   },
   item: {
     flexDirection: 'row',
@@ -161,7 +139,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 2,
   },
-  serviceInfo: {
+  userInfo: {
     flex: 1,
   },
   title: {
@@ -170,18 +148,10 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     color: theme.text,
   },
-  price: {
-    fontSize: 16,
-    color: theme.primary,
-    marginBottom: 4,
-  },
-  creator: {
+  role: {
     fontSize: 14,
     color: theme.secondary,
   },
-  avatarButton: {
-    marginRight: 16,
-  },
 });
 
-export default HomeUser;
+export default Customer;

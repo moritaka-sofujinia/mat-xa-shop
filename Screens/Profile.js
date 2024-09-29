@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: '#DA0037',
+    backgroundColor: '#4ca1af',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   saveButton: {
-    backgroundColor: '#DA0037',
+    backgroundColor: '#4ca1af',
   },
   editButton: {
     backgroundColor: '#444444',	

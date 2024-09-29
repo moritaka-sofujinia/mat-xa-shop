@@ -30,20 +30,14 @@ const LoginScreen = ({ navigation }) => {
       }
 
       const userDoc = querySnapshot.docs[0];
-      const userData = { ...userDoc.data(), id: userDoc.id };  // Include the document ID
+      const userData = { ...userDoc.data(), id: userDoc.id };
 
       if (userData.password !== password) {
         setError('Invalid password');
         return;
       }
 
-      // Successful login
       await signIn(userData, userData.role);
-      // if (userData.role === 'admin') {
-      //   navigation.navigate('Auth', { screen: 'Home' });
-      // } else if (userData.role === 'User'){
-      //   navigation.navigate('Main', { screen: 'HomeUser' });
-      // }
     } catch (error) {
       console.error('Login error:', error);
       setError('An error occurred during login. Please try again.');
@@ -51,11 +45,8 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient
-      colors={['#F38181', '#EAFFD0', '#95E1D3']}
-      style={styles.container}
-    >
-      <Text style={styles.title}>Welcome to Serenity Spa</Text>
+    <LinearGradient colors={['#C4E0E5', '#4CA1AF']} style={styles.container}>
+      <Text style={styles.title}>Mori Spa</Text>
       <View style={styles.inputContainer}>
         <Feather name="mail" size={24} color="#4A4A4A" style={styles.icon} />
         <TextInput
